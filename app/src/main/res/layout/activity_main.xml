@@ -1,47 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/textViewHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:text="Detector de Palindromos"
         android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="center"
+        android:textColor="@color/night"
+        android:layout_gravity="center"/>
+
+    <ImageView
+        android:id="@+id/radarIcon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:src="@drawable/radar"/>
+    <ProgressBar
+        android:id="@+id/progressCircular"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:indeterminateTint="@color/night"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/contenedorSuccess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/succesIcon"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_gravity="center"
+            android:src="@drawable/check"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:text="El texto dado SI es Palindromo"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/contenedorError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/errorIcon"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_gravity="center"
+            android:src="@drawable/error"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:text="El texto dado NO es Palindromo"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/editTextPalabra"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="30dp"
         android:background="@drawable/bg_edit_text"
-        android:hint="Ingresa una palabra o frase..."
+        android:hint="Ingresa el texto..."
         android:paddingStart="20dp"
         android:paddingTop="10dp"
         android:paddingEnd="20dp"
         android:paddingBottom="10dp"
         android:inputType="text"
+        android:textSize="30sp"
         android:imeOptions="actionDone"
-        app:layout_constraintTop_toBottomOf="@+id/textViewHeading" />
+        app:layout_constraintTop_toBottomOf="@+id/SuccesButton" />
 
     <Button
         android:id="@+id/buttonSubmit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="30dp"
         android:text="Revisar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPalabra" />
+        android:layout_gravity="center"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

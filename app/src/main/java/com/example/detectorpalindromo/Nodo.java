@@ -13,10 +13,6 @@ public class Nodo {
         return data;
     }
 
-    public void setData(char data) {
-        this.data = data;
-    }
-
     public Nodo getSiguiente() {
         return siguiente;
     }
