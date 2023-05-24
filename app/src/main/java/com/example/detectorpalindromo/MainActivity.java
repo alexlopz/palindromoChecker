@@ -55,11 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void hideKeyboard(EditText editText) {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-    }
-
     private void submit(ImageView radarIcon,
                         ProgressBar progressCircular,
                         LinearLayout contenedorError,
@@ -77,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
             for (char c : array) {
                 lista.push(c);
-                lista.printList(lista.cabeza);
             }
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -93,5 +87,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, 2000);
         }
+    }
+
+    private void hideKeyboard(EditText editText) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }
