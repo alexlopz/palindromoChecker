@@ -4,9 +4,9 @@ public class Nodo {
     private char data;
     private Nodo siguiente;
 
-    public Nodo(char d) {
-        data = d;
-        siguiente = null;
+    public Nodo(char data) {
+        this.data = data;
+        this.siguiente = null;
     }
 
     public char getData() {

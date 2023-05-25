@@ -3,79 +3,93 @@ package com.example.detectorpalindromo;
 public class ListaEnlazada {
 
     Nodo cabeza;
-    Nodo slow_ptr, fast_ptr, second_half;
+    Nodo punteroLento, punteroRapido, segundaMitad;
 
     public boolean esPalindromo(final Nodo nodo) {
-        slow_ptr = nodo;
-        fast_ptr = nodo;
-        Nodo prev_of_slow_ptr = nodo;
-        Nodo midnode = null; // manejar la lista de tamaños impares
-        boolean res = true; // initialize result
+        punteroLento = nodo;
+        punteroRapido = nodo;
+        Nodo punteroLentoAnterior = nodo;
+        Nodo nodoMedio = null; // manejar la lista de tamaños impares
+        boolean resultado = true;
 
         if (nodo != null && nodo.getSiguiente() != null) {
-            while (fast_ptr != null && fast_ptr.getSiguiente() != null) {
-                fast_ptr = fast_ptr.getSiguiente().getSiguiente();
-                prev_of_slow_ptr = slow_ptr;
-                slow_ptr = slow_ptr.getSiguiente();
+		/* Obtener el centro de la lista. Mover punteroLento por 1
+                y punteroRapido por 2, punteroLento tendrá el medio nodo (algoritmo de la tortuga y liebre) */
+            while (punteroRapido != null && punteroRapido.getSiguiente() != null) {
+                punteroRapido = punteroRapido.getSiguiente().getSiguiente();
+
+		/*Necesitamos punteroLentoAnterior para
+                   listas enlazadas con elementos impares */
+                punteroLentoAnterior = punteroLento;
+                punteroLento = punteroLento.getSiguiente();
             }
-            if (fast_ptr != null) {
-                midnode = slow_ptr;
-                slow_ptr = slow_ptr.getSiguiente();
+
+		/* punteroRapido se convertiría en NULL cuando hay elementos pares
+                en la lista y no NULL para elementos impares. tenemos que saltar
+                el nodo medio para el caso impar y almacenarlo en algún lugar para que podemos restaurar la lista original */
+            if (punteroRapido != null) {
+                nodoMedio = punteroLento;
+                punteroLento = punteroLento.getSiguiente();
             }
 
-            second_half = slow_ptr;
-            prev_of_slow_ptr.setSiguiente(null);
-            reverse();
-            res = compareLists(nodo, second_half);
+            // Ahora invierta la segunda mitad y compárela con la primera mitad.
+            segundaMitad = punteroLento;
+            punteroLentoAnterior.setSiguiente(null);// NULL termina la primera mitad
+            reverse(); // Invertir la segunda mitad
+            resultado = compararListas(nodo, segundaMitad); // compare
 
-            reverse();
+            /* Vuelva a construir la lista original */
+            reverse(); // Invertir la segunda mitad de nuevo
 
-            if (midnode != null) {
-                prev_of_slow_ptr.setSiguiente(midnode);
-                midnode.setSiguiente(second_half);
-            } else prev_of_slow_ptr.setSiguiente(second_half);
+            if (nodoMedio != null) {
+                // Si hubiera un nodo medio (caso de tamaño impar) que no formó parte ni de la primera mitad ni de la segunda mitad.
+                punteroLentoAnterior.setSiguiente(nodoMedio);
+                nodoMedio.setSiguiente(segundaMitad);
+            } else {
+                punteroLentoAnterior.setSiguiente(segundaMitad);
+            }
         }
-        return res;
+        return resultado;
     }
 
     private void reverse() {
-        Nodo prev = null;
-        Nodo current = second_half;
-        Nodo next;
-        while (current != null) {
-            next = current.getSiguiente();
-            current.setSiguiente(prev);
-            prev = current;
-            current = next;
+        Nodo anterior = null;
+        Nodo actual = segundaMitad;
+        Nodo siguiente;
+        while (actual != null) {
+            siguiente = actual.getSiguiente();
+            actual.setSiguiente(anterior);
+            anterior = actual;
+            actual = siguiente;
         }
-        second_half = prev;
+        segundaMitad = anterior;
     }
 
-    private boolean compareLists(Nodo head1, Nodo head2) {
-        Nodo temp1 = head1;
-        Nodo temp2 = head2;
+    /*Función para verificar si dos listas de entrada tienen los mismos datos*/
+    private boolean compararListas(Nodo cabeza1, Nodo cabeza2) {
+        Nodo temporal1 = cabeza1;
+        Nodo temporal2 = cabeza2;
 
-        while (temp1 != null && temp2 != null) {
-            if (temp1.getData() == temp2.getData()) {
-                temp1 = temp1.getSiguiente();
-                temp2 = temp2.getSiguiente();
-            } else return false;
+        while (temporal1 != null && temporal2 != null) {
+            if (temporal1.getData() == temporal2.getData()) {
+                temporal1 = temporal1.getSiguiente();
+                temporal2 = temporal2.getSiguiente();
+            } else {
+                return false;
+            }
         }
 
-        return temp1 == null && temp2 == null;
+        /* Ambos están vacíos volver 1*/
+        return temporal1 == null && temporal2 == null;
+
+        /* Llegará aquí cuando uno sea NULL
+            y otro no */
     }
 
-    public void push(char new_data) {
-        Nodo new_node = new Nodo(new_data);
-        new_node.setSiguiente(cabeza);
-        cabeza = new_node;
+    // Inserta un nodo a la lista enlazada
+    public void insertar(char dato) {
+        final Nodo nodoNuevo = new Nodo(dato);
+        nodoNuevo.setSiguiente(cabeza);
+        cabeza = nodoNuevo;
     }
-
-//    public void printList(Nodo ptr) {
-//        while (ptr != null) {
-//            System.out.print(ptr.getData() + "->");
-//            ptr = ptr.getSiguiente();
-//        }
-//        System.out.println("NULL");
-//    }
 }

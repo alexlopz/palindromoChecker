@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Declaracion de elementos graficos
         final LinearLayout contenedorSuccess = findViewById(R.id.contenedorSuccess);
         final LinearLayout contenedorError = findViewById(R.id.contenedorError);
         final EditText editTextPalabra = findViewById(R.id.editTextPalabra);
@@ -32,21 +33,22 @@ public class MainActivity extends AppCompatActivity {
         final ProgressBar progressCircular = findViewById(R.id.progressCircular);
         final ImageView radarIcon = findViewById(R.id.radarIcon);
 
+        // Accion de boton en pantalla
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submit(radarIcon, progressCircular, contenedorError, contenedorSuccess, editTextPalabra);
+                procesar(radarIcon, progressCircular, contenedorError, contenedorSuccess, editTextPalabra);
             }
         });
 
+        // Accion del boton en el teclado
         editTextPalabra.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE ||
                         (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    // Aquí colocas el código que deseas ejecutar cuando se presiona Enter o se envía el formulario
-                    hideKeyboard(editTextPalabra);
-                    submit(radarIcon, progressCircular, contenedorError, contenedorSuccess, editTextPalabra);
+                    ocultarTeclado(editTextPalabra);
+                    procesar(radarIcon, progressCircular, contenedorError, contenedorSuccess, editTextPalabra);
                     return true;
                 }
                 return false;
@@ -55,32 +57,41 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void submit(ImageView radarIcon,
-                        ProgressBar progressCircular,
-                        LinearLayout contenedorError,
-                        LinearLayout contenedorSuccess,
-                        EditText editTextPalabra) {
+    // Funcion que ejecuta el proceso cuando se presiona el boton de pantalla o el teclado
+    private void procesar(final ImageView radarIcon,
+                          final ProgressBar progressCircular,
+                          final LinearLayout contenedorError,
+                          final LinearLayout contenedorSuccess,
+                          final EditText editTextPalabra) {
+
+        // Se decide si se ocultan o muestran algunos elementos graficos
         radarIcon.setVisibility(View.GONE);
         progressCircular.setVisibility(View.VISIBLE);
         contenedorError.setVisibility(View.GONE);
         contenedorSuccess.setVisibility(View.GONE);
-        String palabraFrase = editTextPalabra.getText().toString().toLowerCase(Locale.ROOT);
-        if (!palabraFrase.isEmpty()) {
-            palabraFrase = palabraFrase.replaceAll("\\s", "");
-            char[] array = palabraFrase.toCharArray();
-            ListaEnlazada lista = new ListaEnlazada();
 
-            for (char c : array) {
-                lista.push(c);
+        // Se captura el texto y se convierte a mayuscula
+        String textoCapturado = editTextPalabra.getText().toString().toLowerCase(Locale.ROOT);
+
+        if (!textoCapturado.isEmpty()) {// se valida que no este vacio el texto
+            textoCapturado = removerEspacios(textoCapturado);
+
+            // se inserta cada letra en la lista enlazada
+            final char[] arrayDeLetras = textoCapturado.toCharArray();
+            final ListaEnlazada listaEnlazada = new ListaEnlazada();
+            for (char letra : arrayDeLetras) {
+                listaEnlazada.insertar(letra);
             }
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     progressCircular.setVisibility(View.GONE);
-                    if (lista.esPalindromo(lista.cabeza)) {
+
+                    if (listaEnlazada.esPalindromo(listaEnlazada.cabeza)) {// Si es palindromo se muestra icono y mensaje de success
                         contenedorError.setVisibility(View.GONE);
                         contenedorSuccess.setVisibility(View.VISIBLE);
-                    } else {
+                    } else {//Si no es palindromo se muestra icono de error
                         contenedorSuccess.setVisibility(View.GONE);
                         contenedorError.setVisibility(View.VISIBLE);
                     }
@@ -89,8 +100,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void hideKeyboard(EditText editText) {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    private String removerEspacios(final String texto) {
+        return texto.replaceAll(getString(R.string.regexSpace), "");
+    }
+
+    private void ocultarTeclado(final EditText editText) {
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }
